@@ -1,0 +1,19 @@
+package com.seams.backend.core.repository;
+
+import com.seams.backend.core.model.AttendanceRecord;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+
+public interface AttendanceRecordRepository extends JpaRepository<AttendanceRecord, Integer> {
+    List<AttendanceRecord> findByStudentId(String studentId);
+
+    @Transactional
+    @Modifying
+    void deleteByStudentId(String studentId);
+
+    @Transactional
+    @Modifying
+    void deleteByEventId(Integer eventId);
+}
