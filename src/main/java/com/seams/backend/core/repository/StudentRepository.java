@@ -11,18 +11,22 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
     Optional<Student> findByUser(User user);
     Optional<Student> findByStudentIdAndRecoveryCode(String studentId, String recoveryCode);
 
-    @org.springframework.data.jpa.repository.Query("SELECT s FROM Student s WHERE " +
-            "LOWER(s.studentId) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+    @org.springframework.data.jpa.repository.Query("SELECT DISTINCT s FROM Student s " +
+            "LEFT JOIN FETCH s.enrollments " +
+            "WHERE LOWER(s.studentId) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
             "LOWER(s.firstname) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
             "LOWER(s.lastname) LIKE LOWER(CONCAT('%', :query, '%'))")
     List<Student> search(@org.springframework.data.repository.query.Param("query") String query);
 
-    @org.springframework.data.jpa.repository.Query("SELECT s FROM Student s " +
-            "LEFT JOIN s.enrollments e " +
+    @org.springframework.data.jpa.repository.Query("SELECT DISTINCT s FROM Student s " +
+            "LEFT JOIN FETCH s.enrollments e " +
             "WHERE LOWER(s.department) LIKE LOWER(CONCAT('%', :dept, '%')) " +
             "OR LOWER(e.department.code) LIKE LOWER(CONCAT('%', :dept, '%')) " +
             "OR LOWER(e.department.name) LIKE LOWER(CONCAT('%', :dept, '%')) " +
             "OR LOWER(:dept) LIKE LOWER(CONCAT('%', s.department, '%')) " +
             "OR LOWER(:dept) LIKE LOWER(CONCAT('%', e.department.code, '%'))")
     List<Student> findAllByDepartment(@org.springframework.data.repository.query.Param("dept") String dept);
+
+    @org.springframework.data.jpa.repository.Query("SELECT DISTINCT s FROM Student s LEFT JOIN FETCH s.enrollments")
+    List<Student> findAllWithEnrollments();
 }

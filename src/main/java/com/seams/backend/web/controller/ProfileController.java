@@ -4,6 +4,7 @@ import com.seams.backend.core.model.*;
 import com.seams.backend.core.repository.*;
 import com.seams.backend.application.service.UserDetails;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -20,16 +21,19 @@ public class ProfileController {
     private final StudentEnrollmentRepository enrollmentRepository;
     private final AttendanceRecordRepository attendanceRepository;
     private final EventRepository eventRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public ProfileController(UserRepository userRepository, StudentRepository studentRepository, 
                              StudentEnrollmentRepository enrollmentRepository,
                              AttendanceRecordRepository attendanceRepository,
-                             EventRepository eventRepository) {
+                             EventRepository eventRepository,
+                             PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.enrollmentRepository = enrollmentRepository;
         this.attendanceRepository = attendanceRepository;
         this.eventRepository = eventRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
@@ -89,5 +93,25 @@ public class ProfileController {
         }
 
         return response;
+    }
+
+    @PutMapping
+    public void updateProfile(@RequestBody Map<String, String> request) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
+        
+        if (request.containsKey("displayName")) {
+            user.setDisplayName(request.get("displayName"));
+        }
+        
+        if (request.containsKey("username")) {
+            user.setUsername(request.get("username"));
+        }
+        
+        if (request.containsKey("password") && request.get("password") != null && !request.get("password").isBlank()) {
+            user.setPassword(passwordEncoder.encode(request.get("password")));
+        }
+        
+        userRepository.save(user);
     }
 }

@@ -68,7 +68,7 @@ public class EventService {
     }
 
     @Transactional
-    @CacheEvict(value = {"events", "students"}, allEntries = true)
+    @CacheEvict(value = {"events", "students", "stats"}, allEntries = true)
     public Event updateStatus(Integer id, String status) {
         Event event = repository.findById(id).orElseThrow();
         
@@ -96,7 +96,7 @@ public class EventService {
     }
 
     @Transactional
-    @CacheEvict(value = {"events", "students"}, allEntries = true)
+    @CacheEvict(value = {"events", "students", "stats"}, allEntries = true)
     public void deleteAcceptedEvent(Integer eventId) {
         Event event = repository.findById(eventId).orElseThrow();
         if ("ACCEPTED".equals(event.getStatus())) {

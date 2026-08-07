@@ -7,6 +7,7 @@ import com.seams.backend.core.model.User;
 import com.seams.backend.core.repository.ProblemRequestRepository;
 import com.seams.backend.core.repository.StudentRepository;
 import com.seams.backend.core.repository.UserRepository;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,6 +36,15 @@ public class ProblemRequestService {
         return repository.findAll();
     }
 
+    public List<ProblemRequest> findAllByStudent() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
+        Student student = studentRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+        return repository.findAllByStudentIdOrderByCreatedAtDesc(student.getStudentId());
+    }
+
+    @CacheEvict(value = "stats", allEntries = true)
     public ProblemRequest submitRequest(String details) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
@@ -67,6 +77,7 @@ public class ProblemRequestService {
         return repository.findByTrackingKey(key);
     }
 
+    @CacheEvict(value = "stats", allEntries = true)
     public ProblemRequest updateStatus(Integer id, Status status, String adminReply) {
         ProblemRequest request = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Request not found"));
