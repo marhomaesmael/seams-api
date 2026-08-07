@@ -24,5 +24,5 @@ COPY --from=build /app/target/*.jar app.jar
 # Expose the application port
 EXPOSE 8084
 
-# Start the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Start the application with memory limits and serial GC for low-resource environments
+ENTRYPOINT ["java", "-Xms128m", "-Xmx256m", "-XX:+UseSerialGC", "-jar", "app.jar"]

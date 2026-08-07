@@ -1,12 +1,16 @@
 package com.seams.backend.web.controller;
 
 import com.seams.backend.application.dto.EventUploadRequest;
+import com.seams.backend.application.dto.StudentSyncDto;
 import com.seams.backend.core.model.ConnectedNode;
 import com.seams.backend.application.service.SyncService;
+import com.seams.backend.core.repository.StudentRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -14,9 +18,11 @@ import java.util.Map;
 public class SyncController {
 
     private final SyncService service;
+    private final StudentRepository studentRepository;
 
-    public SyncController(SyncService service) {
+    public SyncController(SyncService service, StudentRepository studentRepository) {
         this.service = service;
+        this.studentRepository = studentRepository;
     }
 
     @GetMapping("/pairing-key")
@@ -43,6 +49,12 @@ public class SyncController {
     @GetMapping("/pairing-status/{requestId}")
     public ResponseEntity<Map<String, Object>> getPairingStatus(@PathVariable Integer requestId) {
         return ResponseEntity.ok(service.getPairingStatus(requestId));
+    }
+
+    @GetMapping("/students")
+    @Cacheable(value = "students", key = "'sync_' + #department")
+    public List<StudentSyncDto> getSyncStudents(@RequestParam String department) {
+        return studentRepository.findSyncListByDepartment(department);
     }
 
     @PostMapping("/approve/{id}")
