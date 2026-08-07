@@ -80,6 +80,7 @@ public class ProfileController {
                                     m.put("isLate", r.isLate());
                                     m.put("status", r.getStatus());
                                     m.put("hasLogout", event != null ? event.isHasLogout() : true);
+                                    m.put("createdAt", r.getCreatedAt());
                                     return m;
                                 }, Collectors.toList())
                         ));
