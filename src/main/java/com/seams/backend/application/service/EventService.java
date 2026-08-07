@@ -50,15 +50,18 @@ public class EventService {
     }
 
     public List<Map<String, Object>> findRecordsWithNames(Integer eventId) {
-        List<AttendanceRecord> records = attendanceRepository.findAll().stream()
-                .filter(r -> eventId.equals(r.getEventId()))
-                .toList();
+        List<AttendanceRecord> records = attendanceRepository.findByEventId(eventId);
         
+        // N+1 Prevention: Pre-load all students involved in this event into a map
+        Set<String> studentIds = records.stream().map(AttendanceRecord::getStudentId).collect(Collectors.toSet());
+        Map<String, String> studentNameMap = studentRepository.findAll().stream()
+                .filter(s -> studentIds.contains(s.getStudentId()))
+                .collect(Collectors.toMap(Student::getStudentId, s -> s.getFirstname() + " " + s.getLastname(), (a, b) -> a));
+
         return records.stream().map(r -> {
-            Optional<Student> student = studentRepository.findByStudentId(r.getStudentId());
             Map<String, Object> map = new HashMap<>();
             map.put("studentId", r.getStudentId());
-            map.put("studentName", student.map(s -> s.getFirstname() + " " + s.getLastname()).orElse("Unknown"));
+            map.put("studentName", studentNameMap.getOrDefault(r.getStudentId(), "Unknown"));
             map.put("loginTime", r.getTimeIn());
             map.put("logoutTime", r.getTimeOut());
             map.put("isLate", r.isLate());
