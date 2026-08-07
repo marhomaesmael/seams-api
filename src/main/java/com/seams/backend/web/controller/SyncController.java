@@ -52,7 +52,6 @@ public class SyncController {
     }
 
     @GetMapping("/students")
-    @Cacheable(value = "students", key = "'sync_' + #department")
     public List<StudentSyncDto> getSyncStudents(@RequestParam String department) {
         return studentRepository.findSyncListByDepartment(department);
     }
