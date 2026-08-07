@@ -3,6 +3,7 @@ package com.seams.backend.application.service;
 import com.seams.backend.core.model.Status;
 import com.seams.backend.core.model.User;
 import com.seams.backend.core.repository.*;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class StatsService {
         this.userRepository = userRepository;
     }
 
+    @Cacheable(value = "stats", key = "'admin'")
     public Map<String, Object> getAdminStats() {
         Map<String, Object> stats = new HashMap<>();
         stats.put("studentCount", studentRepository.count());
@@ -40,6 +42,7 @@ public class StatsService {
         return stats;
     }
 
+    @Cacheable(value = "stats", key = "T(org.springframework.security.core.context.SecurityContextHolder).getContext().getAuthentication().getName()")
     public Map<String, Object> getStudentStats() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();

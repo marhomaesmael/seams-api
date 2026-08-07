@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface ProblemRequestRepository extends JpaRepository<ProblemRequest, Integer> {
     Optional<ProblemRequest> findTopByStudentIdOrderByCreatedAtDesc(String studentId);
     Optional<ProblemRequest> findByTrackingKey(String trackingKey);
+    List<ProblemRequest> findAllByStudentIdOrderByCreatedAtDesc(String studentId);
     boolean existsByStudentIdAndStatus(String studentId, Status status);
 
     @Transactional

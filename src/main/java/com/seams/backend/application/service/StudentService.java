@@ -41,6 +41,7 @@ public class StudentService {
         this.attendanceRepository = attendanceRepository;
     }
 
+    @Transactional(readOnly = true)
     @Cacheable(value = "students", key = "(#search != null ? #search : 'all') + '_' + (#department != null ? #department : 'all')")
     public List<Student> findAll(String search, String department) {
         if (department != null && !department.isBlank()) {
@@ -49,7 +50,7 @@ public class StudentService {
         if (search != null && !search.isBlank()) {
             return repository.search(search);
         }
-        return repository.findAll();
+        return repository.findAllWithEnrollments();
     }
 
     public Optional<Student> findById(Integer id) {
@@ -57,7 +58,7 @@ public class StudentService {
     }
 
     @Transactional
-    @CacheEvict(value = "students", allEntries = true)
+    @CacheEvict(value = {"students", "stats"}, allEntries = true)
     public Student save(Student student) {
         Optional<Student> existing = repository.findByStudentId(student.getStudentId());
         if (existing.isPresent()) {
@@ -90,7 +91,7 @@ public class StudentService {
     }
 
     @Transactional
-    @CacheEvict(value = "students", allEntries = true)
+    @CacheEvict(value = {"students", "stats"}, allEntries = true)
     public Student update(Integer id, Student request) {
         Student student = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
@@ -122,7 +123,7 @@ public class StudentService {
     }
 
     @Transactional
-    @CacheEvict(value = "students", allEntries = true)
+    @CacheEvict(value = {"students", "stats"}, allEntries = true)
     public void deleteById(Integer id) {
         Student student = repository.findById(id).orElse(null);
         if (student != null) {
@@ -143,7 +144,7 @@ public class StudentService {
     }
 
     @Transactional
-    @CacheEvict(value = "students", allEntries = true)
+    @CacheEvict(value = {"students", "stats"}, allEntries = true)
     public String importFromCsv(MultipartFile file) throws Exception {
         List<String[]> dataLines = new ArrayList<>();
         Map<String, Integer> colMap = new HashMap<>();

@@ -60,7 +60,7 @@ public class SyncService {
     }
 
     public Map<String, Object> requestPairing(String pairingKey, String name, String deptCode, String deptName) {
-        // Rate limit: 1 minute between attempts for the same node identity
+        // Rate limit: 1 minute between attempts for the same station identity
         nodeRepository.findByNameAndDeptCode(name, deptCode).ifPresent(node -> {
             if (node.getLastHeartbeat() != null && 
                 Instant.now().isBefore(node.getLastHeartbeat().plusSeconds(60))) {
@@ -114,7 +114,7 @@ public class SyncService {
         node.setToken(null);
         nodeRepository.save(node);
         
-        // Notify the node via WebSocket using its unique token as the channel identifier
+        // Notify the station via WebSocket using its unique token as the channel identifier
         if (oldToken != null) {
             messagingTemplate.convertAndSend("/topic/node/" + oldToken, 
                 Map.of("status", "REVOKED", "message", "Institutional access revoked by Hub Administrator."));
@@ -133,7 +133,7 @@ public class SyncService {
     }
 
     @Transactional
-    @CacheEvict(value = {"events", "students"}, allEntries = true)
+    @CacheEvict(value = {"events", "students", "stats"}, allEntries = true)
     public void syncAttendance(EventUploadRequest request) {
         List<Event> existing = eventRepository.findByLocalSyncIdAndAseadoProfile(request.localSyncId(), request.aseadoProfile());
         
@@ -184,7 +184,7 @@ public class SyncService {
     }
 
     @Transactional
-    @CacheEvict(value = {"events", "students"}, allEntries = true)
+    @CacheEvict(value = {"events", "students", "stats"}, allEntries = true)
     public void cancelUpload(String localSyncId, String aseadoProfile) {
         List<Event> existing = eventRepository.findByLocalSyncIdAndAseadoProfile(localSyncId, aseadoProfile);
         existing.stream()

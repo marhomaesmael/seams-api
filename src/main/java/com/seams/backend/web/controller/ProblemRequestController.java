@@ -25,6 +25,12 @@ public class ProblemRequestController {
         return service.findAll();
     }
 
+    @GetMapping("/student/requests")
+    @PreAuthorize("hasAuthority('STUDENT')")
+    public List<ProblemRequest> getStudentRequests() {
+        return service.findAllByStudent();
+    }
+
     @PostMapping("/student/requests")
     @PreAuthorize("hasAuthority('STUDENT')")
     public ProblemRequest submit(@RequestBody Map<String, String> request) {

@@ -3,6 +3,7 @@ package com.seams.backend.web.controller;
 import com.seams.backend.core.model.Role;
 import com.seams.backend.core.model.User;
 import com.seams.backend.core.repository.UserRepository;
+import com.seams.backend.application.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +17,12 @@ public class SupervisorController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
-    public SupervisorController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public SupervisorController(UserRepository userRepository, PasswordEncoder passwordEncoder, UserService userService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
     }
 
     @GetMapping("/admins")
@@ -40,9 +43,6 @@ public class SupervisorController {
     @DeleteMapping("/admins/{id}")
     @PreAuthorize("hasAuthority('SUPERVISOR')")
     public void deleteAdmin(@PathVariable Integer id) {
-        User user = userRepository.findById(id).orElseThrow();
-        if (user.getRole() == Role.ADMIN) {
-            userRepository.delete(user);
-        }
+        userService.delete(id);
     }
 }
