@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface AttendanceRecordRepository extends JpaRepository<AttendanceRecord, Integer> {
     List<AttendanceRecord> findByStudentId(String studentId);
+    List<AttendanceRecord> findByEventId(Integer eventId);
 
     @Transactional
     @Modifying

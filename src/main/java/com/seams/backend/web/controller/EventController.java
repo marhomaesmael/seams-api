@@ -22,15 +22,18 @@ public class EventController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR')")
     public List<Map<String, Object>> getPending() {
         return service.findPendingApprovals().stream()
-                .map(e -> Map.of(
-                    "id", e.getId().toString(),
-                    "eventName", e.getName(),
-                    "uploadDate", e.getEventDate(),
-                    "hasLogout", e.isHasLogout(),
-                    "recordCount", service.findRecordsWithNames(e.getId()).size(),
-                    "status", "Pending",
-                    "logs", service.findRecordsWithNames(e.getId())
-                ))
+                .map(e -> {
+                    List<Map<String, Object>> logs = service.findRecordsWithNames(e.getId());
+                    return Map.of(
+                        "id", e.getId().toString(),
+                        "eventName", e.getName(),
+                        "uploadDate", e.getEventDate(),
+                        "hasLogout", e.isHasLogout(),
+                        "recordCount", logs.size(),
+                        "status", "Pending",
+                        "logs", logs
+                    );
+                })
                 .toList();
     }
 
@@ -38,15 +41,18 @@ public class EventController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR')")
     public List<Map<String, Object>> getHistory() {
         return service.findAcceptedEvents().stream()
-                .map(e -> Map.of(
-                    "id", e.getId().toString(),
-                    "eventName", e.getName(),
-                    "uploadDate", e.getEventDate(),
-                    "hasLogout", e.isHasLogout(),
-                    "recordCount", service.findRecordsWithNames(e.getId()).size(),
-                    "status", "Accepted",
-                    "logs", service.findRecordsWithNames(e.getId())
-                ))
+                .map(e -> {
+                    List<Map<String, Object>> logs = service.findRecordsWithNames(e.getId());
+                    return Map.of(
+                        "id", e.getId().toString(),
+                        "eventName", e.getName(),
+                        "uploadDate", e.getEventDate(),
+                        "hasLogout", e.isHasLogout(),
+                        "recordCount", logs.size(),
+                        "status", "Accepted",
+                        "logs", logs
+                    );
+                })
                 .toList();
     }
 
