@@ -10,6 +10,9 @@ public interface AttendanceRecordRepository extends JpaRepository<AttendanceReco
     List<AttendanceRecord> findByStudentId(String studentId);
     List<AttendanceRecord> findByEventId(Integer eventId);
 
+    @org.springframework.data.jpa.repository.Query("SELECT COUNT(r) FROM AttendanceRecord r WHERE r.eventId = :eventId")
+    long countByEventId(@org.springframework.data.repository.query.Param("eventId") Integer eventId);
+
     @Transactional
     @Modifying
     void deleteByStudentId(String studentId);

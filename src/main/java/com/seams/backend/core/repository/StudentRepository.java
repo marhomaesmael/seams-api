@@ -30,7 +30,9 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
     @org.springframework.data.jpa.repository.Query("SELECT DISTINCT s FROM Student s LEFT JOIN FETCH s.enrollments")
     List<Student> findAllWithEnrollments();
 
-    @org.springframework.data.jpa.repository.Query("SELECT new com.seams.backend.application.dto.StudentSyncDto(s.id, s.studentId, s.firstname, s.lastname, s.department) " +
+    @org.springframework.data.jpa.repository.Query("SELECT new com.seams.backend.application.dto.StudentSyncDto(s.id, s.studentId, s.firstname, s.lastname, s.department, s.year, s.program) " +
             "FROM Student s WHERE LOWER(s.department) LIKE LOWER(CONCAT('%', :dept, '%'))")
     List<com.seams.backend.application.dto.StudentSyncDto> findSyncListByDepartment(@org.springframework.data.repository.query.Param("dept") String dept);
+
+    List<Student> findAllByStudentIdIn(java.util.Collection<String> studentIds);
 }

@@ -3,6 +3,9 @@ package com.seams.backend.core.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(indexes = {
+    @Index(name = "idx_event_status_hub", columnList = "status")
+})
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

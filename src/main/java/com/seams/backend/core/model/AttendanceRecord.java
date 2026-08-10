@@ -3,6 +3,10 @@ package com.seams.backend.core.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(indexes = {
+    @Index(name = "idx_att_event", columnList = "eventId"),
+    @Index(name = "idx_att_student", columnList = "studentId")
+})
 public class AttendanceRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
