@@ -1,5 +1,6 @@
 package com.seams.backend.web.controller;
 
+import com.seams.backend.application.dto.EventSummaryDto;
 import com.seams.backend.core.model.Event;
 import com.seams.backend.application.service.EventService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,40 +21,20 @@ public class EventController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR')")
-    public List<Map<String, Object>> getPending() {
-        return service.findPendingApprovals().stream()
-                .map(e -> {
-                    List<Map<String, Object>> logs = service.findRecordsWithNames(e.getId());
-                    return Map.of(
-                        "id", e.getId().toString(),
-                        "eventName", e.getName(),
-                        "uploadDate", e.getEventDate(),
-                        "hasLogout", e.isHasLogout(),
-                        "recordCount", logs.size(),
-                        "status", "Pending",
-                        "logs", logs
-                    );
-                })
-                .toList();
+    public List<EventSummaryDto> getPending() {
+        return service.findPendingSummaries();
     }
 
     @GetMapping("/history")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR')")
-    public List<Map<String, Object>> getHistory() {
-        return service.findAcceptedEvents().stream()
-                .map(e -> {
-                    List<Map<String, Object>> logs = service.findRecordsWithNames(e.getId());
-                    return Map.of(
-                        "id", e.getId().toString(),
-                        "eventName", e.getName(),
-                        "uploadDate", e.getEventDate(),
-                        "hasLogout", e.isHasLogout(),
-                        "recordCount", logs.size(),
-                        "status", "Accepted",
-                        "logs", logs
-                    );
-                })
-                .toList();
+    public List<EventSummaryDto> getHistory() {
+        return service.findAcceptedSummaries();
+    }
+
+    @GetMapping("/{id}/details")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR')")
+    public List<Map<String, Object>> getDetails(@PathVariable Integer id) {
+        return service.findRecordsWithNames(id);
     }
 
     @PostMapping("/{id}")

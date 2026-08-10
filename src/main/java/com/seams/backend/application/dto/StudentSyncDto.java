@@ -5,5 +5,7 @@ public record StudentSyncDto(
     String studentId,
     String firstname,
     String lastname,
-    String department
+    String department,
+    String year,
+    String program
 ) {}

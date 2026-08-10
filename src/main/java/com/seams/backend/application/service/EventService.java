@@ -1,5 +1,6 @@
 package com.seams.backend.application.service;
 
+import com.seams.backend.application.dto.EventSummaryDto;
 import com.seams.backend.core.model.Event;
 import com.seams.backend.core.model.AttendanceRecord;
 import com.seams.backend.core.model.Student;
@@ -31,18 +32,32 @@ public class EventService {
         this.studentRepository = studentRepository;
     }
 
-    @Cacheable(value = "events", key = "'pending'")
-    public List<Event> findPendingApprovals() {
+    @Cacheable(value = "events", key = "'pending_summaries'")
+    public List<EventSummaryDto> findPendingSummaries() {
         return repository.findAll().stream()
                 .filter(e -> "PENDING".equals(e.getStatus()))
+                .map(this::mapToSummary)
                 .toList();
     }
 
-    @Cacheable(value = "events", key = "'accepted'")
-    public List<Event> findAcceptedEvents() {
+    @Cacheable(value = "events", key = "'accepted_summaries'")
+    public List<EventSummaryDto> findAcceptedSummaries() {
         return repository.findAll().stream()
                 .filter(e -> "ACCEPTED".equals(e.getStatus()))
+                .map(this::mapToSummary)
                 .toList();
+    }
+
+    private EventSummaryDto mapToSummary(Event e) {
+        long count = attendanceRepository.countByEventId(e.getId());
+        return new EventSummaryDto(
+            e.getId(),
+            e.getName(),
+            e.getEventDate(),
+            count,
+            e.isHasLogout(),
+            e.getStatus()
+        );
     }
 
     @Cacheable(value = "events", key = "#id")
@@ -53,10 +68,9 @@ public class EventService {
     public List<Map<String, Object>> findRecordsWithNames(Integer eventId) {
         List<AttendanceRecord> records = attendanceRepository.findByEventId(eventId);
         
-        // N+1 Prevention: Pre-load all students involved in this event into a map
+        // N+1 Prevention: Pre-load only the students involved in this event into a map
         Set<String> studentIds = records.stream().map(AttendanceRecord::getStudentId).collect(Collectors.toSet());
-        Map<String, String> studentNameMap = studentRepository.findAll().stream()
-                .filter(s -> studentIds.contains(s.getStudentId()))
+        Map<String, String> studentNameMap = studentRepository.findAllByStudentIdIn(studentIds).stream()
                 .collect(Collectors.toMap(Student::getStudentId, s -> s.getFirstname() + " " + s.getLastname(), (a, b) -> a));
 
         return records.stream().map(r -> {
