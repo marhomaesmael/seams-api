@@ -45,6 +45,7 @@ public class ProfileController {
         response.put("username", user.getUsername());
         response.put("displayName", user.getDisplayName());
         response.put("role", user.getRole());
+        response.put("googleEmail", user.getGoogleEmail());
 
         if (user.getRole() == Role.STUDENT) {
             studentRepository.findByUser(user).ifPresent(student -> {

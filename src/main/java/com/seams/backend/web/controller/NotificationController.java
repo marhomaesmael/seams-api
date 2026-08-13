@@ -28,4 +28,17 @@ public class NotificationController {
     public ResponseEntity<Notification> publish(@RequestBody Notification notification) {
         return ResponseEntity.ok(service.save(notification));
     }
+
+    @PutMapping("/admin/notifications/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR')")
+    public ResponseEntity<Notification> update(@PathVariable Integer id, @RequestBody Notification notification) {
+        return ResponseEntity.ok(service.update(id, notification));
+    }
+
+    @DeleteMapping("/admin/notifications/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR')")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        service.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
 }

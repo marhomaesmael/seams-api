@@ -90,4 +90,26 @@ public class ProblemRequestService {
     public void cleanupOldRequests() {
         repository.deleteByCreatedAtBefore(Instant.now().minus(Duration.ofDays(2)));
     }
+
+    @CacheEvict(value = "stats", allEntries = true)
+    public void deleteRequest(Integer id) {
+        repository.deleteById(id);
+    }
+
+    @CacheEvict(value = "stats", allEntries = true)
+    public void deleteStudentRequest(Integer id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
+        Student student = studentRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        ProblemRequest request = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Request not found"));
+
+        if (!request.getStudentId().equals(student.getStudentId())) {
+            throw new RuntimeException("Access denied: You do not own this request.");
+        }
+
+        repository.deleteById(id);
+    }
 }

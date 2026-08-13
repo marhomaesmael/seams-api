@@ -5,6 +5,8 @@ import com.seams.backend.core.model.*;
 import com.seams.backend.core.repository.*;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,15 +44,15 @@ public class StudentService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "students", key = "(#search != null ? #search : 'all') + '_' + (#department != null ? #department : 'all')")
-    public List<Student> findAll(String search, String department) {
+    @Cacheable(value = "students", key = "(#search != null ? #search : 'all') + '_' + (#department != null ? #department : 'all') + '_' + #pageable.pageNumber + '_' + #pageable.pageSize")
+    public Page<Student> findAll(String search, String department, Pageable pageable) {
         if (department != null && !department.isBlank()) {
-            return repository.findAllByDepartment(department);
+            return repository.findAllByDepartment(department, pageable);
         }
         if (search != null && !search.isBlank()) {
-            return repository.search(search);
+            return repository.search(search, pageable);
         }
-        return repository.findAllWithEnrollments();
+        return repository.findAllWithEnrollments(pageable);
     }
 
     public Optional<Student> findById(Integer id) {

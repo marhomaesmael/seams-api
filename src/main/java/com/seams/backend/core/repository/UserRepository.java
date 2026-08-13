@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByUsername(String username);
+    Optional<User> findByGoogleEmail(String googleEmail);
 
     @Query("SELECT u FROM User u WHERE " +
            "LOWER(u.username) LIKE LOWER(CONCAT('%', :query, '%')) OR " +

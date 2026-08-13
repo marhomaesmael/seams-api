@@ -5,14 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a6962abb-9bdf-4808-81ee-6e76a5173bf0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/application/dto/StudentSyncDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/application/dto/StudentSyncDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/application/service/EventService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/application/service/EventService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/core/model/AttendanceRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/core/model/AttendanceRecord.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/core/model/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/core/model/Event.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/application/service/NotificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/application/service/NotificationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/application/service/ProblemRequestService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/application/service/ProblemRequestService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/application/service/StudentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/application/service/StudentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/core/model/Notification.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/core/model/Notification.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/core/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/core/model/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/core/repository/AttendanceRecordRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/core/repository/AttendanceRecordRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/core/repository/StudentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/core/repository/StudentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/core/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/core/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/infrastructure/security/SecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/infrastructure/security/SecurityConfiguration.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/web/controller/EventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/web/controller/EventController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/web/controller/NotificationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/web/controller/NotificationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/web/controller/ProblemRequestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/web/controller/ProblemRequestController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/web/controller/ProfileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/web/controller/ProfileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/seams/backend/web/controller/StudentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/seams/backend/web/controller/StudentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/seams/backend/application/service/ProblemRequestService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/seams/backend/application/service/ProblemRequestService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/seams/backend/application/service/StudentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/seams/backend/application/service/StudentService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/seams/backend/core/repository/StudentRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/seams/backend/core/repository/StudentRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/seams/backend/web/controller/ProblemRequestController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/seams/backend/web/controller/ProblemRequestController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/seams/backend/web/controller/StudentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/seams/backend/web/controller/StudentController.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -48,6 +48,8 @@ public class SecurityConfiguration {
                                         "/api/v1/auth/problem-request/track/**",
                                         "/api/v1/auth/reset-password",
                                         "/api/v1/auth/discovery/**",
+                                        "/api/v1/auth/google/login",
+                                        "/api/v1/auth/google/link",
                                         "/api/v1/check/health"
                                 ).permitAll()
                                 .requestMatchers("/api/v1/sync/pair").permitAll()

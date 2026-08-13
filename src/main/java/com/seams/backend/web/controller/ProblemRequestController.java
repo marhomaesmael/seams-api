@@ -39,7 +39,19 @@ public class ProblemRequestController {
 
     @PutMapping("/admin/requests/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR')")
-    public ProblemRequest update(@PathVariable Integer id, @RequestParam Status status, @RequestParam String reply) {
+    public ProblemRequest update(@PathVariable Integer id, @RequestParam Status status, @RequestParam(required = false, defaultValue = "") String reply) {
         return service.updateStatus(id, status, reply);
+    }
+
+    @DeleteMapping("/admin/requests/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR')")
+    public void delete(@PathVariable Integer id) {
+        service.deleteRequest(id);
+    }
+
+    @DeleteMapping("/student/requests/{id}")
+    @PreAuthorize("hasAuthority('STUDENT')")
+    public void deleteStudentRequest(@PathVariable Integer id) {
+        service.deleteStudentRequest(id);
     }
 }

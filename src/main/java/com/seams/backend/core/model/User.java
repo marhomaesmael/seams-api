@@ -20,6 +20,7 @@ public class User implements UserDetails {
     private String password;
     private String displayName;
     private boolean mustChangePassword = false;
+    private String googleEmail;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -55,6 +56,9 @@ public class User implements UserDetails {
     public boolean isMustChangePassword() { return mustChangePassword; }
     public void setMustChangePassword(boolean mustChangePassword) { this.mustChangePassword = mustChangePassword; }
 
+    public String getGoogleEmail() { return googleEmail; }
+    public void setGoogleEmail(String googleEmail) { this.googleEmail = googleEmail; }
+
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
 
@@ -78,6 +82,7 @@ public class User implements UserDetails {
         private String password;
         private String displayName;
         private boolean mustChangePassword = false;
+        private String googleEmail;
         private Role role;
 
         public UserBuilder id(Integer id) { this.id = id; return this; }
@@ -85,11 +90,13 @@ public class User implements UserDetails {
         public UserBuilder password(String password) { this.password = password; return this; }
         public UserBuilder displayName(String displayName) { this.displayName = displayName; return this; }
         public UserBuilder mustChangePassword(boolean mustChangePassword) { this.mustChangePassword = mustChangePassword; return this; }
+        public UserBuilder googleEmail(String googleEmail) { this.googleEmail = googleEmail; return this; }
         public UserBuilder role(Role role) { this.role = role; return this; }
 
         public User build() {
             User user = new User(id, username, password, displayName, role);
             user.setMustChangePassword(mustChangePassword);
+            user.setGoogleEmail(googleEmail);
             return user;
         }
     }

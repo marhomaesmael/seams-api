@@ -12,6 +12,7 @@ public class Notification {
     private String date;
     private String startTime;
     private String endTime;
+    private String venue;
     @Column(length = 2000)
     private String message;
     private String publisherName;
@@ -29,6 +30,8 @@ public class Notification {
     public void setStartTime(String startTime) { this.startTime = startTime; }
     public String getEndTime() { return endTime; }
     public void setEndTime(String endTime) { this.endTime = endTime; }
+    public String getVenue() { return venue; }
+    public void setVenue(String venue) { this.venue = venue; }
     public String getMessage() { return message; }
     public void setMessage(String message) { this.message = message; }
     public String getPublisherName() { return publisherName; }

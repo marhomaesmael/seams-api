@@ -33,4 +33,22 @@ public class NotificationService {
         notification.setPublishedAt(Instant.now());
         return repository.save(notification);
     }
+
+    public Notification update(Integer id, Notification request) {
+        Notification notification = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Announcement not found"));
+        
+        notification.setEventName(request.getEventName());
+        notification.setVenue(request.getVenue());
+        notification.setDate(request.getDate());
+        notification.setStartTime(request.getStartTime());
+        notification.setEndTime(request.getEndTime());
+        notification.setMessage(request.getMessage());
+        
+        return repository.save(notification);
+    }
+
+    public void deleteById(Integer id) {
+        repository.deleteById(id);
+    }
 }

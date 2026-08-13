@@ -9,6 +9,8 @@ import com.seams.backend.core.repository.AttendanceRecordRepository;
 import com.seams.backend.core.repository.StudentRepository;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,15 +67,31 @@ public class EventService {
         return repository.findById(id);
     }
 
-    public List<Map<String, Object>> findRecordsWithNames(Integer eventId) {
-        List<AttendanceRecord> records = attendanceRepository.findByEventId(eventId);
+    public Page<Map<String, Object>> findRecordsWithNames(Integer eventId, String search, Pageable pageable) {
+        Page<AttendanceRecord> recordPage;
         
-        // N+1 Prevention: Pre-load only the students involved in this event into a map
-        Set<String> studentIds = records.stream().map(AttendanceRecord::getStudentId).collect(Collectors.toSet());
-        Map<String, String> studentNameMap = studentRepository.findAllByStudentIdIn(studentIds).stream()
+        if (search != null && !search.isBlank()) {
+            // Find students matching the search query first using lightweight ID search
+            List<String> studentIds = studentRepository.searchIds(search);
+            
+            if (studentIds.isEmpty()) {
+                return Page.empty(pageable);
+            }
+            
+            recordPage = attendanceRepository.findByEventIdAndStudentIdIn(eventId, studentIds, pageable);
+        } else {
+            recordPage = attendanceRepository.findByEventId(eventId, pageable);
+        }
+        
+        // N+1 Prevention: Pre-load only the students involved in the current page
+        Set<String> studentIdsOnPage = recordPage.getContent().stream()
+                .map(AttendanceRecord::getStudentId)
+                .collect(Collectors.toSet());
+        
+        Map<String, String> studentNameMap = studentRepository.findAllByStudentIdIn(studentIdsOnPage).stream()
                 .collect(Collectors.toMap(Student::getStudentId, s -> s.getFirstname() + " " + s.getLastname(), (a, b) -> a));
 
-        return records.stream().map(r -> {
+        return recordPage.map(r -> {
             Map<String, Object> map = new HashMap<>();
             map.put("studentId", r.getStudentId());
             map.put("studentName", studentNameMap.getOrDefault(r.getStudentId(), "Unknown"));
@@ -82,7 +100,7 @@ public class EventService {
             map.put("isLate", r.isLate());
             map.put("status", r.getStatus());
             return map;
-        }).collect(Collectors.toList());
+        });
     }
 
     @Transactional

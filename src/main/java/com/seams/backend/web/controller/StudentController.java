@@ -3,6 +3,8 @@ package com.seams.backend.web.controller;
 import com.seams.backend.application.dto.StudentResponse;
 import com.seams.backend.core.model.Student;
 import com.seams.backend.application.service.StudentService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +25,12 @@ public class StudentController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR')")
-    public List<StudentResponse> getAll(
+    public Page<StudentResponse> getAll(
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) String department) {
-        return service.findAll(search, department).stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+            @RequestParam(required = false) String department,
+            Pageable pageable) {
+        return service.findAll(search, department, pageable)
+                .map(this::mapToResponse);
     }
 
     @PostMapping

@@ -3,6 +3,8 @@ package com.seams.backend.web.controller;
 import com.seams.backend.application.dto.EventSummaryDto;
 import com.seams.backend.core.model.Event;
 import com.seams.backend.application.service.EventService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +35,11 @@ public class EventController {
 
     @GetMapping("/{id}/details")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR')")
-    public List<Map<String, Object>> getDetails(@PathVariable Integer id) {
-        return service.findRecordsWithNames(id);
+    public Page<Map<String, Object>> getDetails(
+            @PathVariable Integer id,
+            @RequestParam(required = false) String search,
+            Pageable pageable) {
+        return service.findRecordsWithNames(id, search, pageable);
     }
 
     @PostMapping("/{id}")
